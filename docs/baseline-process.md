@@ -19,7 +19,7 @@ A baseline is a compressed srcML archive of a specific project at a specific VCS
 3. In the GitHub Actions UI, run the language-specific **Generate baseline — \<Language\>** workflow manually (`workflow_dispatch`):
    - `project`: pick the project you're rolling (required).
    - `srcml_version` / `project_tag`: optional overrides of the config values. On a non-dry run, the pointer PR writes them back into `config/<language>.toml`.
-   - `dry_run`: set to `true` to produce a workflow artifact without creating a release or opening a PR.
+   - `dry_run`: checked by default, which produces a workflow artifact without creating a release or opening a PR. Uncheck it to publish.
 4. The workflow:
    - Installs the pinned srcml release `.deb`.
    - Shallow-clones the project at the configured tag (optionally narrowed to the configured `subdir`).
@@ -45,7 +45,7 @@ Full-project generation on `ubuntu-latest` is expected to take between a few min
 
 ## Dry-run
 
-Pass `dry_run: true` to build the archive and upload it as a workflow artifact without creating a release or opening a PR. Useful for experimenting with srcml flags before committing to a release, or for validating that a newly added project in `config/<language>.toml` produces a sensible archive.
+`dry_run` is on by default: the archive is built and uploaded as a workflow artifact without creating a release or opening a PR. Uncheck it in the dispatch form to publish. Useful for experimenting with srcml flags before committing to a release, or for validating that a newly added project in `config/<language>.toml` produces a sensible archive.
 
 ## Archive size
 

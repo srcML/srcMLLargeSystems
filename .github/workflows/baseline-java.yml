@@ -20,7 +20,8 @@ on:
       dry_run:
         description: "Build the archive but skip publishing a release / opening a PR"
         required: false
-        default: "false"
+        type: boolean
+        default: true
 
 permissions:
   contents: write
