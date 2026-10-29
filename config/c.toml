@@ -3,9 +3,11 @@ language = "c"
 srcml_flags = ["-r", "-j", "4", "--src-encoding=UTF-8"]
 
 [srcml]
-version = "1.1.0"
+version = "1.2.0"
+
 [[projects]]
 name = "linux"
 repo = "https://github.com/torvalds/linux.git"
 tag = "v6.6"
-current_baseline_release = "baseline-c-linux-v6.6-srcml-1.1.0"
+current_baseline_release = "baseline-c-linux-v6.6-srcml-1.2.0"
+exclude_files = []
