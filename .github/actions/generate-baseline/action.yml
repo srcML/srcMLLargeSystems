@@ -19,6 +19,10 @@ inputs:
     description: "Override the project's VCS tag (default: read from config)."
     required: false
     default: ""
+  exclude_files_override:
+    description: "Override the project's exclude_files with a JSON array of paths, e.g. [\"a/b.c\"]. [] excludes nothing. Empty string reads from config."
+    required: false
+    default: ""
   dry_run:
     description: "If 'true', build the archive and upload it as a workflow artifact without creating a release or opening a PR."
     required: false
@@ -54,6 +58,7 @@ runs:
         PROJECT: ${{ inputs.project }}
         SV_OVERRIDE: ${{ inputs.srcml_version_override }}
         PT_OVERRIDE: ${{ inputs.project_tag_override }}
+        EF_OVERRIDE: ${{ inputs.exclude_files_override }}
       run: |
         set -euo pipefail
         CFG="config/${LANGUAGE}.toml"
@@ -87,6 +92,15 @@ runs:
         # dispatch overrides
         [ -n "$SV_OVERRIDE" ] && SV="$SV_OVERRIDE"
         [ -n "$PT_OVERRIDE" ] && PT="$PT_OVERRIDE"
+        # Empty means "use config"; [] is a valid override that excludes nothing.
+        EF_JSON=""
+        if [ -n "${EF_OVERRIDE//[[:space:]]/}" ]; then
+          if ! EF_JSON="$(jq -c 'if type == "array" and all(.[]; type == "string") then . else error("not an array of strings") end' <<<"$EF_OVERRIDE")"; then
+            echo "::error::exclude_files override must be a JSON array of strings, e.g. [] or [\"path/a\", \"path/b\"]; got: $EF_OVERRIDE"
+            exit 1
+          fi
+          EXCLUDES="$(jq -r '.[]' <<<"$EF_JSON")"
+        fi
 
         TAG="baseline-${LANGUAGE}-${PROJECT}-${PT}-srcml-${SV}"
 
@@ -103,6 +117,7 @@ runs:
           echo "manifest_name=${TAG}.manifest.json"
           echo "log_name=${TAG}.generate.log"
           echo "config_path=$CFG"
+          echo "exclude_files_override_json=$EF_JSON"
         } >> "$GITHUB_OUTPUT"
         {
           echo "exclude_files<<__EOF__"
@@ -278,7 +293,9 @@ runs:
         TAG: ${{ steps.cfg.outputs.release_tag }}
         SV: ${{ steps.cfg.outputs.srcml_version }}
         PT: ${{ steps.cfg.outputs.project_tag }}
+        EF_JSON: ${{ steps.cfg.outputs.exclude_files_override_json }}
       run: |
+        set -euo pipefail
         # Write back the srcml version and project tag actually used, so that
         # dispatch overrides land in config alongside the new pointer.
         yq -i -p toml -o toml '
@@ -286,6 +303,12 @@ runs:
           (.projects[] | select(.name == strenv(PROJECT)) | .tag) = strenv(PT) |
           (.projects[] | select(.name == strenv(PROJECT)) | .current_baseline_release) = strenv(TAG)
         ' "$CFG"
+        # Only touch exclude_files when overridden, so projects without the key don't gain one.
+        if [ -n "$EF_JSON" ]; then
+          yq -i -p toml -o toml '
+            (.projects[] | select(.name == strenv(PROJECT)) | .exclude_files) = (strenv(EF_JSON) | from_json)
+          ' "$CFG"
+        fi
 
     - name: Open baseline pointer PR
       if: ${{ inputs.dry_run != 'true' }}
@@ -296,7 +319,7 @@ runs:
         branch: baseline-pointer/${{ steps.cfg.outputs.release_tag }}
         title: "Update baseline pointer → ${{ steps.cfg.outputs.release_tag }}"
         body: |
-          Automated PR to update `${{ steps.cfg.outputs.config_path }}` → `[srcml].version` and the `[[projects]]` entry for `${{ inputs.project }}` (`tag`, `current_baseline_release`).
+          Automated PR to update `${{ steps.cfg.outputs.config_path }}` → `[srcml].version` and the `[[projects]]` entry for `${{ inputs.project }}` (`tag`, `current_baseline_release`, and `exclude_files` if overridden).
 
           - language:     ${{ inputs.language }}
           - project:      ${{ inputs.project }}

@@ -17,6 +17,10 @@ on:
         description: "Override project tag (default: read from config)"
         required: false
         default: ""
+      exclude_files:
+        description: "Override exclude_files with a JSON array of paths, e.g. [\"a/b.c\"]. [] excludes nothing (default: read from config)"
+        required: false
+        default: ""
       dry_run:
         description: "Build the archive but skip publishing a release / opening a PR"
         required: false
@@ -43,4 +47,5 @@ jobs:
           project: ${{ inputs.project }}
           srcml_version_override: ${{ inputs.srcml_version }}
           project_tag_override: ${{ inputs.project_tag }}
+          exclude_files_override: ${{ inputs.exclude_files }}
           dry_run: ${{ inputs.dry_run }}
