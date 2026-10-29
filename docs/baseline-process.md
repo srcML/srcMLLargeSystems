@@ -18,7 +18,7 @@ A baseline is a compressed srcML archive of a specific project at a specific VCS
 2. Push the branch.
 3. In the GitHub Actions UI, run the language-specific **Generate baseline — \<Language\>** workflow manually (`workflow_dispatch`):
    - `project`: pick the project you're rolling (required).
-   - `srcml_version` / `project_tag`: optional overrides for experimentation.
+   - `srcml_version` / `project_tag`: optional overrides of the config values. On a non-dry run, the pointer PR writes them back into `config/<language>.toml`.
    - `dry_run`: set to `true` to produce a workflow artifact without creating a release or opening a PR.
 4. The workflow:
    - Installs the pinned srcml release `.deb`.
@@ -26,7 +26,7 @@ A baseline is a compressed srcML archive of a specific project at a specific VCS
    - Runs `srcml` against the tree with the configured flags.
    - Compresses the archive with `zstd -19 --long=27`.
    - Publishes `<release-tag>.xml.zst` + `<release-tag>.manifest.json` + `<release-tag>.generate.log` as a GitHub Release named `<release-tag>`, where **`<release-tag>` = `baseline-<language>-<project>-<project_tag>-srcml-<srcml_version>`**.
-   - Opens a PR bumping the matching `[[projects]]` entry's `current_baseline_release` in `config/<language>.toml`.
+   - Opens a PR updating `config/<language>.toml` to the values used for the release: `[srcml].version`, plus the matching `[[projects]]` entry's `tag` and `current_baseline_release`. `[srcml].version` is language-wide, so bumping it through one project's run also moves the default for every other project in that language.
 5. Review and merge the PR. Downstream consumers automatically pick up the new baseline on their next run.
 
 ## Release tag format

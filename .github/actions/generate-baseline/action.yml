@@ -276,8 +276,14 @@ runs:
         CFG: ${{ steps.cfg.outputs.config_path }}
         PROJECT: ${{ inputs.project }}
         TAG: ${{ steps.cfg.outputs.release_tag }}
+        SV: ${{ steps.cfg.outputs.srcml_version }}
+        PT: ${{ steps.cfg.outputs.project_tag }}
       run: |
+        # Write back the srcml version and project tag actually used, so that
+        # dispatch overrides land in config alongside the new pointer.
         yq -i -p toml -o toml '
+          .srcml.version = strenv(SV) |
+          (.projects[] | select(.name == strenv(PROJECT)) | .tag) = strenv(PT) |
           (.projects[] | select(.name == strenv(PROJECT)) | .current_baseline_release) = strenv(TAG)
         ' "$CFG"
 
@@ -290,7 +296,7 @@ runs:
         branch: baseline-pointer/${{ steps.cfg.outputs.release_tag }}
         title: "Update baseline pointer → ${{ steps.cfg.outputs.release_tag }}"
         body: |
-          Automated PR to update `${{ steps.cfg.outputs.config_path }}` → the `[[projects]]` entry for `${{ inputs.project }}`'s `current_baseline_release`.
+          Automated PR to update `${{ steps.cfg.outputs.config_path }}` → `[srcml].version` and the `[[projects]]` entry for `${{ inputs.project }}` (`tag`, `current_baseline_release`).
 
           - language:     ${{ inputs.language }}
           - project:      ${{ inputs.project }}
