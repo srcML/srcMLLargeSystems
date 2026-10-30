@@ -9,4 +9,5 @@ version = "1.2.0"
 name = "cmake"
 repo = "https://github.com/Kitware/CMake.git"
 tag = "v4.4.5"
-current_baseline_release = ""
+current_baseline_release = "baseline-cmake-cmake-v4.4.5-srcml-1.2.0"
+exclude_files = ["Modules/CheckSourceCompiles.cmake", "Modules/FindPkgConfig.cmake", "Modules/GetPrerequisites.cmake", "Modules/WriteCompilerDetectionHeader.cmake"]
