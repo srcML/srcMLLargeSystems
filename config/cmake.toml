@@ -1,0 +1,12 @@
+schema = 2
+language = "cmake"
+srcml_flags = ["-r", "-j", "4", "--src-encoding=UTF-8"]
+
+[srcml]
+version = "1.2.0"
+
+[[projects]]
+name = "cmake"
+repo = "https://github.com/Kitware/CMake.git"
+tag = "v4.4.5"
+current_baseline_release = ""

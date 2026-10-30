@@ -1,0 +1,12 @@
+schema = 2
+language = "typescript"
+srcml_flags = ["-r", "-j", "4", "--src-encoding=UTF-8"]
+
+[srcml]
+version = "1.2.0"
+
+[[projects]]
+name = "vscode"
+repo = "https://github.com/microsoft/vscode.git"
+tag = "1.144.0"
+current_baseline_release = ""

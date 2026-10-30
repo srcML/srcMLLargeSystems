@@ -1,6 +1,6 @@
 # srcMLLargeSystems
 
-Regression testing for [srcML](https://www.srcml.org/) against large real-world codebases across C, C++, C#, Java, and Python.
+Regression testing for [srcML](https://www.srcml.org/) against large real-world codebases across C, C++, C#, Java, Python, JavaScript, TypeScript, and CMake.
 
 ## How it works
 
@@ -9,7 +9,7 @@ Regression testing for [srcML](https://www.srcml.org/) against large real-world 
 
 ## Layout
 
-- `config/<language>.toml` — per-language pinned versions and the list of projects to baseline for that language. One entry per language: `c`, `cpp`, `csharp`, `java`, `python`.
+- `config/<language>.toml` — per-language pinned versions and the list of projects to baseline for that language. One entry per language: `c`, `cpp`, `csharp`, `java`, `python`, `javascript`, `typescript`, `cmake`. srcML (1.2.0+) parses TypeScript with its JavaScript grammar, so `typescript` units are reported as `JavaScript` by `--parser-test`; the separate key just keeps a TypeScript-heavy project on its own baseline.
 - `config/migrations.json` — global migration patterns applied across every language.
 - `config/<language>.migrations.json` — optional per-language migration patterns, layered on top of the global ones.
 - `.github/actions/generate-baseline/` — composite action that does the actual baseline generation; reused by every `baseline-<language>.yml`.

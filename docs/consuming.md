@@ -61,11 +61,14 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - { language: c,      project: linux  }
-          - { language: cpp,    project: llvm   }
-          - { language: csharp, project: roslyn }
-          - { language: java,   project: jdk    }
-          - { language: python, project: django }
+          - { language: c,          project: linux   }
+          - { language: cpp,        project: llvm    }
+          - { language: csharp,     project: roslyn  }
+          - { language: java,       project: jdk     }
+          - { language: python,     project: django  }
+          - { language: javascript, project: webpack }
+          - { language: typescript, project: vscode  }
+          - { language: cmake,      project: cmake   }
     uses: <OWNER>/srcMLLargeSystems/.github/workflows/regression-test.yml@mainline
     with:
       srcml-installer-artifact-name: srcml-installer
@@ -85,7 +88,7 @@ To cover only a subset of pairs, trim the `matrix.target` list. To test a single
 |---|---|---|---|
 | `srcml-installer-artifact-name` | string | *required* | Name of the actions artifact containing `srcml*.deb`. |
 | `srcml-installer-artifact-run-id` | string | `""` | For cross-workflow-run downloads. Leave empty to read the artifact from the current run. |
-| `language` | string | *required* | Language key — must match a `config/<language>.toml` file (`c`, `cpp`, `csharp`, `java`, `python`). |
+| `language` | string | *required* | Language key — must match a `config/<language>.toml` file (`c`, `cpp`, `csharp`, `java`, `python`, `javascript`, `typescript`, `cmake`). |
 | `project` | string | *required* | Project name — must match a `[[projects]].name` entry in `config/<language>.toml`. |
 | `baseline-release-tag` | string | `""` | Override the per-project `current_baseline_release` from config. Useful for testing against an older baseline. |
 | `fail-on-regression` | boolean | `true` | Fail the workflow when regressions are found. Set `false` to keep green but still produce artifacts. |

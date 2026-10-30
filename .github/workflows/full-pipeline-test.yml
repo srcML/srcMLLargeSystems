@@ -115,6 +115,9 @@ jobs:
           - {language: csharp, project: roslyn}
           - {language: java, project: jdk}
           - {language: python, project: django}
+          - {language: javascript, project: webpack}
+          - {language: typescript, project: vscode}
+          - {language: cmake, project: cmake}
     uses: ./.github/workflows/regression-test.yml
     with:
       srcml-installer-artifact-name: srcml-installer-from-source

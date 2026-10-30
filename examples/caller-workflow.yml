@@ -52,11 +52,14 @@ jobs:
       fail-fast: false
       matrix:
         target:
-          - { language: c,      project: linux  }
-          - { language: cpp,    project: llvm   }
-          - { language: csharp, project: roslyn }
-          - { language: java,   project: jdk    }
-          - { language: python, project: django }
+          - { language: c,          project: linux   }
+          - { language: cpp,        project: llvm    }
+          - { language: csharp,     project: roslyn  }
+          - { language: java,       project: jdk     }
+          - { language: python,     project: django  }
+          - { language: javascript, project: webpack }
+          - { language: typescript, project: vscode  }
+          - { language: cmake,      project: cmake   }
     uses: <OWNER>/srcMLLargeSystems/.github/workflows/regression-test.yml@mainline
     with:
       srcml-installer-artifact-name: srcml-installer

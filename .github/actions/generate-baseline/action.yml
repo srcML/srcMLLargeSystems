@@ -6,7 +6,7 @@ description: >
 
 inputs:
   language:
-    description: "Language key — must match a config/<language>.toml file (e.g. c, cpp, csharp, java, python)."
+    description: "Language key — must match a config/<language>.toml file (e.g. c, cpp, csharp, java, python, javascript, typescript, cmake)."
     required: true
   project:
     description: "Project name — must match a [[projects]].name entry in config/<language>.toml."

@@ -13,7 +13,7 @@ on:
         type: string
         default: ""
       language:
-        description: "Language key — must match a config/<language>.toml file (e.g. c, cpp, csharp, java, python)"
+        description: "Language key — must match a config/<language>.toml file (e.g. c, cpp, csharp, java, python, javascript, typescript, cmake)"
         required: true
         type: string
       project:
@@ -54,7 +54,7 @@ on:
         required: false
         default: ""
       language:
-        description: "Language key (c, cpp, csharp, java, python)"
+        description: "Language key (c, cpp, csharp, java, python, javascript, typescript, cmake)"
         required: true
         default: "c"
       project:
