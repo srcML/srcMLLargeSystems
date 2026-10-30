@@ -4,6 +4,7 @@ srcml_flags = ["-r", "-j", "4", "--src-encoding=UTF-8"]
 
 [srcml]
 version = "1.1.0"
+
 [[projects]]
 name = "llvm"
 repo = "https://github.com/llvm/llvm-project.git"
