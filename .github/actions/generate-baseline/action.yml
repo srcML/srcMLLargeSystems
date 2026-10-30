@@ -27,6 +27,10 @@ inputs:
     description: "If 'true', build the archive and upload it as a workflow artifact without creating a release or opening a PR."
     required: false
     default: "false"
+  verbose:
+    description: "If 'true', pass --verbose to srcml for per-file status in the job log. Not recorded in the manifest flags, since it does not change the archive."
+    required: false
+    default: "false"
   github_token:
     description: "Token used to publish the release and open the pointer PR. Defaults to GITHUB_TOKEN of the calling workflow."
     required: false
@@ -189,8 +193,12 @@ runs:
         OUTPUT_XML: ${{ steps.cfg.outputs.xml_name }}
         OUTPUT_ZST: ${{ steps.cfg.outputs.zst_name }}
         LOG_FILE: ${{ steps.cfg.outputs.log_name }}
+        VERBOSE: ${{ inputs.verbose }}
       run: |
         set -euo pipefail
+        if [ "$VERBOSE" = "true" ]; then
+          export SRCML_FLAGS="$SRCML_FLAGS --verbose"
+        fi
         if [ -n "$SUBDIR" ]; then
           INPUT_DIR="project-src/$SUBDIR"
           if [ ! -d "$INPUT_DIR" ]; then

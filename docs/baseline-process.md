@@ -21,6 +21,7 @@ A baseline is a compressed srcML archive of a specific project at a specific VCS
    - `srcml_version` / `project_tag`: optional overrides of the config values. On a non-dry run, the pointer PR writes them back into `config/<language>.toml`.
    - `exclude_files`: optional override of the project's `exclude_files`, as a JSON array (the TOML array from the config can be pasted as-is). `[]` excludes nothing; leave it blank to use the config. On a non-dry run, the pointer PR writes the override back into the config.
    - `dry_run`: checked by default, which produces a workflow artifact without creating a release or opening a PR. Uncheck it to publish.
+   - `verbose`: unchecked by default. Check it to pass `--verbose` to srcml, which writes per-file status to the job log and `<release-tag>.generate.log`. Useful for finding the file a stalled run is stuck on. It is not recorded in the manifest's `flags`, since it does not change the archive.
 4. The workflow:
    - Installs the pinned srcml release `.deb`.
    - Shallow-clones the project at the configured tag (optionally narrowed to the configured `subdir`).

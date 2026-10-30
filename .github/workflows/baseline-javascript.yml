@@ -26,6 +26,11 @@ on:
         required: false
         type: boolean
         default: true
+      verbose:
+        description: "Pass --verbose to srcml (per-file status in the job log and generate log)"
+        required: false
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -49,3 +54,4 @@ jobs:
           project_tag_override: ${{ inputs.project_tag }}
           exclude_files_override: ${{ inputs.exclude_files }}
           dry_run: ${{ inputs.dry_run }}
+          verbose: ${{ inputs.verbose }}
